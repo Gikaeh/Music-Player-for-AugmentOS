@@ -51,23 +51,4 @@ router.get('/callback', async (req: Request, res: Response) => {
   }
 });
 
-const settingsJsonPathPublic = path.join(__dirname, '../public', 'tpa_config.json');
-router.get('/tpa_config.json', async (req: Request, res: Response) => {
-  try {
-    res.sendFile(settingsJsonPathPublic)
-  } catch (error) {
-    logger.error('Authentication error:', {
-      res: res,
-      req: req,
-      error: {
-        message: error.message,
-        stack: error.stack,
-        responseStatus: error.response?.status,
-        responseBody: error.response?.data 
-      }
-    });
-    res.send('Error retrieving tpa_config.json')
-  }
-});
-
 export const authRoutes = router;

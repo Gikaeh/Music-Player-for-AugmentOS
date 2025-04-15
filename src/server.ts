@@ -6,8 +6,7 @@ import {tokenService} from './services/token-service';
 import {setupSessionHandlers, displayCurrentlyPlaying} from './handlers/session-handler';
 import logger from './utils/logger';
 import {SettingKey, ProcessedUserSettings} from './types/index'
-import {setTimeout as sleep} from 'timers/promises';
-import { remove } from 'winston';
+import path from 'path';
 
 export class MusicPlayerServer extends TpaServer {
   private activeUserSessions = new Map<string, {session: TpaSession, sessionId: string}>();
@@ -16,7 +15,8 @@ export class MusicPlayerServer extends TpaServer {
     super({
       packageName: config.augmentOS.packageName,
       apiKey: config.augmentOS.apiKey,
-      port: config.server.port
+      port: config.server.port,
+      publicDir: path.join(__dirname, './public')
     });
 
     // Get the Express app for adding custom routes
