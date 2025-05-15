@@ -478,7 +478,7 @@ async function handleShazamInput(session: TpaSession, userId: string, transcript
       const displayText = 
         `Found song:\n\n` + 
         `Song: ${songInfo.trackName}\n` + 
-        `Artist: ${songInfo.artist}`;
+        `Artist: ${songInfo.artists}`;
       session.layouts.showTextWall(displayText, {durationMs: 5000});
     } else {
       session.layouts.showTextWall(`Could not identify song for "${transcript.substring(0, 30)}${transcript.length > 30 ? '...' : ''}"`, {durationMs: 5000});

@@ -109,6 +109,12 @@ export class MusicPlayerServer extends TpaServer {
   }
 
   public async pullUserSettings(userId: string): Promise<any | null> {
+    const processedSettings: ProcessedUserSettings = {
+      musicPlayer: 'spotify',
+      isVoiceCommands: true,
+      isHeadsUpDisplay: false,
+    };
+
     try {
       logger.info(`Fetching settings for user ${userId}`);
       const response = await axios.get(`http://cloud.augmentos.org/tpasettings/user/${config.augmentOS.packageName}`, {
@@ -116,12 +122,6 @@ export class MusicPlayerServer extends TpaServer {
       });
       const settingsArray: any[] = response.data.settings;
       logger.info(`Fetched settings for user ${userId}: ${settingsArray}`);
-
-      const processedSettings: ProcessedUserSettings = {
-        musicPlayer: 'spotify',
-        isVoiceCommands: true,
-        isHeadsUpDisplay: false,
-      };
 
       settingsArray.forEach(setting => {
         switch (setting.key) {
@@ -161,7 +161,7 @@ export class MusicPlayerServer extends TpaServer {
           responseBody: error.response?.data 
         }
       });
-      return null;
+      return processedSettings;
     }
   }
 }
