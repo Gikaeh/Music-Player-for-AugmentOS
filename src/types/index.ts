@@ -1,4 +1,5 @@
 import {SessionMode, PlayerCommand} from "../handlers/session-handler";
+import {TpaSession} from "@augmentos/sdk";
 
 export interface SpotifyCredentials {
   accessToken: string;
@@ -12,7 +13,7 @@ export enum SettingKey {
   HEADS_UP_DISPLAY = 'heads_up_display'
 }
 
-export interface ProcessedUserSettings {
+export interface UserSettings {
   musicPlayer: 'spotify' | 'android' | 'ios',
   isVoiceCommands: boolean,
   isHeadsUpDisplay: boolean
@@ -59,4 +60,10 @@ export interface MusicPlayerService {
   getDevices?(userId: string): Promise<DeviceInfo[]>;
   setDevice?(userId: string, deviceId: string[]): Promise<void>;
   saveTrackToLibrary?(userId: string, trackInfo: PlaybackInfo): Promise<void>;
+}
+
+export interface ActiveSessionInfo {
+  session: TpaSession;
+  sessionId: string;
+  sessionHandlerCleanup: (() => void) | null;
 }
