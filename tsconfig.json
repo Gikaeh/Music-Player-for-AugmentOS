@@ -10,6 +10,6 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "index.ts", "old-files/oldindex.ts", "tpa_config.json"],
+  "include": ["src/**/*", "index.ts", "tpa_config.json"],
   "exclude": ["node_modules", "dist"]
 }
