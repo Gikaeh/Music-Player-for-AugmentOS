@@ -33,7 +33,9 @@ export class SpotifyService implements MusicPlayerService{
     tokenService.setToken(userId, {
       accessToken: data.body.access_token,
       refreshToken: data.body.refresh_token,
-      expiresAt: Date.now() + data.body.expires_in * 1000
+      expiresIn: Date.now() + data.body.expires_in * 1000,
+      scope: data.body.scope,
+      tokenType: data.body.token_type
     });
   }
 
@@ -42,7 +44,7 @@ export class SpotifyService implements MusicPlayerService{
     if (!credentials) return false;
 
     // Check if token needs refreshing
-    if (Date.now() > credentials.expiresAt - 60000) {
+    if (Date.now() > credentials.expiresIn - 60000) {
       try {
         // Set the refresh token and refresh access token
         this.spotifyApi.setRefreshToken(credentials.refreshToken);
@@ -52,7 +54,9 @@ export class SpotifyService implements MusicPlayerService{
         tokenService.setToken(userId, {
           accessToken: data.body.access_token,
           refreshToken: credentials.refreshToken,
-          expiresAt: Date.now() + data.body.expires_in * 1000
+          expiresIn: Date.now() + data.body.expires_in * 1000,
+          scope: data.body.scope,
+          tokenType: data.body.token_type
         });
 
         // Set the new access token
@@ -115,6 +119,7 @@ export class SpotifyService implements MusicPlayerService{
       logger.warn(`No token found for user ${userId}`, {
         userId: userId
       });
+      return;
     }
 
     this.spotifyApi.setAccessToken(credentials.accessToken);
@@ -128,6 +133,7 @@ export class SpotifyService implements MusicPlayerService{
       logger.warn(`No token found for user ${userId}`, {
         userId: userId
       });
+      return;
     }
 
     this.spotifyApi.setAccessToken(credentials.accessToken);
@@ -141,6 +147,7 @@ export class SpotifyService implements MusicPlayerService{
       logger.warn(`No token found for user ${userId}`, {
         userId: userId
       });
+      return;
     }
 
     this.spotifyApi.setAccessToken(credentials.accessToken);
@@ -154,6 +161,7 @@ export class SpotifyService implements MusicPlayerService{
       logger.warn(`No token found for user ${userId}`, {
         userId: userId
       });
+      return;
     }
 
     this.spotifyApi.setAccessToken(credentials.accessToken);

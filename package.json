@@ -11,10 +11,12 @@
     "dependencies": {
         "@augmentos/sdk": "^1.1.19",
         "@mentra/sdk": "^2.0.4",
+        "@prisma/client": "^6.11.1",
         "bun": "^1.2.18",
         "dotenv": "^16.6.1",
         "express": "^5.1.0",
         "node-shazam": "^1.2.7",
+        "pg": "^8.16.3",
         "spotify-web-api-node": "^5.0.2",
         "winston": "^3.17.0"
     },

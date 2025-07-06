@@ -5,9 +5,7 @@ import {config} from './config/environment';
 import {tokenService} from './services/token-service';
 import {setupSessionHandlers, displayCurrentlyPlaying} from './handlers/session-handler';
 import logger from './utils/logger';
-import {SettingKey, UserSettings, ActiveSessionInfo} from './types/index'
-import path from 'path';
-import fs from 'fs'
+import {SettingKey, UserSettings, ActiveSessionInfo} from './types/index';
 
 const defaultSettings: UserSettings = {
   musicPlayer: 'spotify',
