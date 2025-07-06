@@ -1,5 +1,6 @@
 import {SessionMode, PlayerCommand} from "../handlers/session-handler";
-import {TpaSession} from "@augmentos/sdk";
+// import {TpaSession} from "@augmentos/sdk";
+import {AppSession} from "@mentra/sdk";
 
 export interface SpotifyCredentials {
   accessToken: string;
@@ -63,7 +64,7 @@ export interface MusicPlayerService {
 }
 
 export interface ActiveSessionInfo {
-  session: TpaSession;
+  session: AppSession;
   sessionId: string;
   sessionHandlerCleanup: (() => void) | null;
 }
