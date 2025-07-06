@@ -59,7 +59,7 @@ export class TokenService {
   }
 
   public getToken(userId: string): SpotifyCredentials | undefined {
-    const encryptedCreds = this.userTokens.get(userId);
+    const encryptedCreds = this.userTokens.get(userId.toLowerCase());
     if (encryptedCreds) {
       const accessToken = this.decrypt(encryptedCreds.accessToken);
       const refreshToken = this.decrypt(encryptedCreds.refreshToken);
@@ -72,27 +72,27 @@ export class TokenService {
   public setToken(userId: string, credentials: SpotifyCredentials): void {
     const encryptedAccessToken = this.encrypt(credentials.accessToken);
     const encryptedRefreshToken = this.encrypt(credentials.refreshToken);
-    this.userTokens.set(userId, {...credentials, accessToken: encryptedAccessToken, refreshToken: encryptedRefreshToken});
+    this.userTokens.set(userId.toLowerCase(), {...credentials, accessToken: encryptedAccessToken, refreshToken: encryptedRefreshToken});
     this.saveTokens();
   }
 
   public removeToken(userId: string): void {
-    if (this.userTokens.has(userId)) {
-      this.userTokens.delete(userId);
+    if (this.userTokens.has(userId.toLowerCase())) {
+      this.userTokens.delete(userId.toLowerCase());
       this.saveTokens();
       logger.info(`Removed token for session ${userId}`);
     }
   }
 
   public hasToken(userId: string): boolean {
-    return this.userTokens.has(userId);
+    return this.userTokens.has(userId.toLowerCase());
   }
 
   private saveTokens(): void {
     const tokensToSave: { [key: string]: any } = {}; // Use 'any' temporarily or define a storage type
     for (const [userId, credentials] of this.userTokens.entries()) {
       try {
-        tokensToSave[userId] = {
+        tokensToSave[userId.toLowerCase()] = {
           ...credentials, // Keep non-sensitive fields
           accessToken: this.encrypt(credentials.accessToken), // Encrypt before saving
           refreshToken: this.encrypt(credentials.refreshToken), // Encrypt before saving
@@ -176,7 +176,7 @@ export class TokenService {
           };
 
           // Add the successfully decrypted token to our temporary map
-          loadedTokens.set(userId, decryptedCredentials);
+          loadedTokens.set(userId.toLowerCase(), decryptedCredentials);
         } catch (error) {
             // Log specific decryption errors
             logger.error(`Failed to decrypt token for user ${userId}. Skipping.`, {

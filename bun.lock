@@ -14,8 +14,8 @@
         "winston": "^3.17.0",
       },
       "devDependencies": {
-        "@types/express": "^5.0.1",
-        "@types/node": "^22.15.18",
+        "@types/express": "^5.0.3",
+        "@types/node": "^22.15.31",
         "@types/spotify-web-api-node": "^5.0.11",
         "nodemon": "^3.1.10",
         "ts-node": "^10.9.2",
