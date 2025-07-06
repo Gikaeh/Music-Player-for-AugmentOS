@@ -1,5 +1,5 @@
-import {server} from './src/server';
-import { logEnvironment } from './src/config/environment';
+import {server} from './server';
+import { logEnvironment } from './config/environment';
 
 // Log environment variables
 logEnvironment();
