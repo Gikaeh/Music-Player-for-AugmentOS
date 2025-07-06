@@ -1,7 +1,6 @@
 import {Router, Request, Response} from 'express';
 import {spotifyService} from '../services/spotify-service';
-import logger from '../utils/logger'
-import path from 'path'
+import logger from '../utils/logger';
 
 const router = Router();
 

@@ -1,10 +1,7 @@
 import express from 'express';
 import {authRoutes} from './controllers/auth-controller';
-import { tokenService } from './services/token-service';
 
-export async function createExpressApp() {
-  await tokenService.init();
-  
+export function createExpressApp() {
   const app = express();
   
   // Add authentication routes

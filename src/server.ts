@@ -22,7 +22,9 @@ export class MusicPlayerServer extends AppServer {
       apiKey: config.augmentOS.apiKey,
       port: config.server.port,
     });
-
+  }
+  
+  public attachCustomRoute() {
     // Get the Express app for adding custom routes
     const app = this.getExpressApp();
 
@@ -245,4 +247,14 @@ export class MusicPlayerServer extends AppServer {
   }
 }
 
-export const server = new MusicPlayerServer();
+export async function startServer() {
+  await tokenService.init();
+  
+  const server = new MusicPlayerServer();
+
+  server.attachCustomRoute();
+
+  await server.start();
+
+  return server;
+}
