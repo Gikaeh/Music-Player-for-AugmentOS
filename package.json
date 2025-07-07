@@ -4,22 +4,27 @@
     "description": "Spotify TPA for AugmentOS Glasses",
     "main": "dist/index.js",
     "scripts": {
-        "build": "tsc",
-        "start": "node dist/index.js",
-        "dev": "ts-node src/index.ts",
-        "watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
+        "start": "npx prisma migrate deploy && bun src/index.ts",
+        "dev": "bun --hot src/index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "postinstall": "prisma generate"
     },
     "dependencies": {
-        "@augmentos/sdk": "^1.1.13",
-        "dotenv": "^16.5.0",
+        "@augmentos/sdk": "^1.1.19",
+        "@mentra/sdk": "^2.0.4",
+        "@prisma/client": "^6.11.1",
+        "bun": "^1.2.18",
+        "dotenv": "^16.6.1",
         "express": "^5.1.0",
         "node-shazam": "^1.2.7",
+        "pg": "^8.16.3",
+        "prisma": "^6.11.1",
         "spotify-web-api-node": "^5.0.2",
         "winston": "^3.17.0"
     },
     "devDependencies": {
         "@types/express": "^5.0.3",
-        "@types/node": "^22.15.31",
+        "@types/node": "^22.16.0",
         "@types/spotify-web-api-node": "^5.0.11",
         "nodemon": "^3.1.10",
         "ts-node": "^10.9.2",

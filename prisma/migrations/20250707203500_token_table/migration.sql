@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Token" ALTER COLUMN "expiresIn" SET DATA TYPE BIGINT;

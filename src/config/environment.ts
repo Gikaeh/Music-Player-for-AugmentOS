@@ -15,8 +15,8 @@ export const config = {
     authPort: process.env.AUTH_PORT
   },
   augmentOS: {
-    apiKey: process.env.AUGMENTOS_API_KEY || '',
-    packageName: process.env.AUGMENTOS_PACKAGE_NAME || 'org.gikaeh.music-player-for-augment-os'
+    apiKey: process.env.MENTRAOS_API_KEY || '',
+    packageName: process.env.MENTRAOS_PACKAGE_NAME || 'org.gikaeh.music-player-for-augment-os'
   },
   encryption: {
     key: process.env.TOKEN_ENCRYPTION_KEY

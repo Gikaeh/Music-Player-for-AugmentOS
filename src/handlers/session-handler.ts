@@ -1,4 +1,5 @@
-import {TpaSession} from '@augmentos/sdk';
+// import {TpaSession} from '@augmentos/sdk';
+import {AppSession} from '@mentra/sdk';
 import {setTimeout as sleep} from 'timers/promises';
 import logger from '../utils/logger'
 import {DeviceInfo, SessionState} from '../types'
@@ -41,7 +42,7 @@ const triggerPhases = {
 }
 
 // Set up session event handlers
-export function setupSessionHandlers(session: TpaSession, sessionId: string, userId: string, userSettings: any): () => void {
+export function setupSessionHandlers(session: AppSession, sessionId: string, userId: string, userSettings: any): () => void {
   // Array for handler cleanup
   const cleanupHandlers: Array<() => void> = [];
   const settings = userSettings
@@ -214,7 +215,7 @@ export function setupSessionHandlers(session: TpaSession, sessionId: string, use
 }
 
 // Handle player commands
-async function handlePlayerCommand(session: TpaSession, userId: string, command: PlayerCommand): Promise<void> {
+async function handlePlayerCommand(session: AppSession, userId: string, command: PlayerCommand): Promise<void> {
   logger.info(`[User ${userId}] Handling command ${command}`);
 
   // Check if user is authenticated
@@ -292,7 +293,7 @@ async function handlePlayerCommand(session: TpaSession, userId: string, command:
 }
 
 // Display the currently playing track
-export async function displayCurrentlyPlaying(session: TpaSession, userId: string): Promise<void> {
+export async function displayCurrentlyPlaying(session: AppSession, userId: string): Promise<void> {
   try {
     const tokenValid = await spotifyService.refreshTokenIfNeeded(userId);
     if (!tokenValid) {
@@ -348,7 +349,7 @@ function getSessionState(userId: string): SessionState {
   return sessionStates.get(userId)!;
 }
 
-function setSessionState(session: TpaSession, userId: string, newMode: SessionMode, options?: {data?: any; timeoutMs?: number; timeoutMessage?: string, pendingCommand?: PlayerCommand}): void {
+function setSessionState(session: AppSession, userId: string, newMode: SessionMode, options?: {data?: any; timeoutMs?: number; timeoutMessage?: string, pendingCommand?: PlayerCommand}): void {
   const currentState = getSessionState(userId);
 
   if (currentState.timeoutId) {
@@ -439,14 +440,14 @@ function clearSessionState(userId: string): void {
   }
 }
 
-async function triggerShazam(session: TpaSession, userId: string): Promise<void> {
+async function triggerShazam(session: AppSession, userId: string): Promise<void> {
   logger.info(`[User ${userId}] Triggering shazam listening mode.`, {
     userId: userId
   });
   await enterShazamMode(session, userId);
 }
 
-async function enterShazamMode(session: TpaSession, userId: string): Promise<void> {
+async function enterShazamMode(session: AppSession, userId: string): Promise<void> {
   session.layouts.showTextWall('Listening for song...', {durationMs: 10000 - 500});
   // Update session mode to LISTENING_FOR_SHAZAM
   setSessionState(session, userId, SessionMode.LISTENING_FOR_SHAZAM, {
@@ -455,7 +456,7 @@ async function enterShazamMode(session: TpaSession, userId: string): Promise<voi
   });
 }
 
-async function handleShazamInput(session: TpaSession, userId: string, transcript: string): Promise<void> {
+async function handleShazamInput(session: AppSession, userId: string, transcript: string): Promise<void> {
   logger.info(`[User ${userId}] Processing Shazam input: "${transcript}"`, {
     userId: userId,
     transcript: transcript
@@ -498,7 +499,7 @@ async function handleShazamInput(session: TpaSession, userId: string, transcript
   }
 }
 
-async function triggerDeviceList(session: TpaSession, userId: string, pendingCommand?: PlayerCommand): Promise<void> {
+async function triggerDeviceList(session: AppSession, userId: string, pendingCommand?: PlayerCommand): Promise<void> {
   logger.info(`[User ${userId}] Triggering device list and selection mode.`, {
     pendingCommand: pendingCommand
   });
@@ -549,7 +550,7 @@ async function triggerDeviceList(session: TpaSession, userId: string, pendingCom
   }
 }
 
-async function enterDeviceSelectionMode(session: TpaSession, userId: string, devices: DeviceInfo[], pendingCommand?: PlayerCommand): Promise<void> {
+async function enterDeviceSelectionMode(session: AppSession, userId: string, devices: DeviceInfo[], pendingCommand?: PlayerCommand): Promise<void> {
   const devicesToShow = devices.slice(0, 3);
   let deviceList = 'Say the number to select device:\n\n';
 
@@ -574,7 +575,7 @@ async function enterDeviceSelectionMode(session: TpaSession, userId: string, dev
   });
 }
 
-async function handleDeviceSelectionInput(session: TpaSession, userId: string, transcript: string, availableDevices: DeviceInfo[]): Promise<void> {
+async function handleDeviceSelectionInput(session: AppSession, userId: string, transcript: string, availableDevices: DeviceInfo[]): Promise<void> {
   logger.debug(`[User ${userId}] Processing device selection input: "${transcript}"`);
   const stateBeforeReset = getSessionState(userId);
   const commandToRetry = stateBeforeReset.pendingCommand;

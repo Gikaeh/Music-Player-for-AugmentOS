@@ -4,3 +4,4 @@
 .env
 /scripts
 /src/logs
+/src/generated/prisma

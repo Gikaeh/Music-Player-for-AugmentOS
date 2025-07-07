@@ -1,7 +1,7 @@
 import {Router, Request, Response} from 'express';
+import {AuthenticatedRequest} from '@mentra/sdk';
 import {spotifyService} from '../services/spotify-service';
-import logger from '../utils/logger'
-import path from 'path'
+import logger from '../utils/logger';
 
 const router = Router();
 
@@ -49,6 +49,19 @@ router.get('/callback', async (req: Request, res: Response) => {
     });
     res.send('Authentication failed. Please try again.');
   }
+});
+
+router.get('/webview', (req: AuthenticatedRequest, res) => {
+  const userId = req.authUserId
+
+  if (!userId) {
+    logger.error('User ID not found on AuthenticatedRequest in /webview route.');
+    return res.status(401).send('<h1>Unauthorized</h1><p>Could not identify the user. Please ensure you are logged in.</p>');
+  }
+  
+  const redirectUrl = `/login/${userId}`;
+  logger.info(`Redirecting from /webview to ${redirectUrl} for user: ${userId}`);
+  res.redirect(redirectUrl);
 });
 
 export const authRoutes = router;

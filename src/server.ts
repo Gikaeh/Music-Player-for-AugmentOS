@@ -1,22 +1,19 @@
-import {TpaServer, TpaSession} from '@augmentos/sdk';
+// import {TpaServer, TpaSession} from '@augmentos/sdk';
+import {AppServer, AppSession } from '@mentra/sdk';
 import {createExpressApp} from './app';
 import {config} from './config/environment';
 import {tokenService} from './services/token-service';
 import {setupSessionHandlers, displayCurrentlyPlaying} from './handlers/session-handler';
 import logger from './utils/logger';
-import {SettingKey, UserSettings, ActiveSessionInfo} from './types/index'
-import path from 'path';
-import fs from 'fs'
-
-const tpaConfig = JSON.parse(fs.readFileSync(path.join(__dirname, './public/tpa_config.json'), 'utf8'));
+import {SettingKey, UserSettings, ActiveSessionInfo} from './types/index';
 
 const defaultSettings: UserSettings = {
-  musicPlayer: tpaConfig.settings.find((s: any) => s.key === SettingKey.MUSIC_PLAYER)?.defaultValue || 'spotify',
-  isVoiceCommands: tpaConfig.settings.find((s: any) => s.key === SettingKey.VOICE_COMMANDS)?.defaultValue || true,
-  isHeadsUpDisplay: tpaConfig.settings.find((s: any) => s.key === SettingKey.HEADS_UP_DISPLAY)?.defaultValue || false,
+  musicPlayer: 'spotify',
+  isVoiceCommands: true,
+  isHeadsUpDisplay: false,
 };
 
-export class MusicPlayerServer extends TpaServer {
+export class MusicPlayerServer extends AppServer {
   private activeUserSessions = new Map<string, ActiveSessionInfo>();
 
   constructor() {
@@ -24,9 +21,10 @@ export class MusicPlayerServer extends TpaServer {
       packageName: config.augmentOS.packageName,
       apiKey: config.augmentOS.apiKey,
       port: config.server.port,
-      publicDir: path.join(__dirname, './public')
     });
-
+  }
+  
+  public attachCustomRoute() {
     // Get the Express app for adding custom routes
     const app = this.getExpressApp();
 
@@ -66,7 +64,7 @@ export class MusicPlayerServer extends TpaServer {
   }
 
   // Called when new user connects to app
-  protected async onSession(session: TpaSession, sessionId: string, userId: string): Promise<void> {
+  protected async onSession(session: AppSession, sessionId: string, userId: string): Promise<void> {
     logger.info(`New session started: ${sessionId} for user: ${userId}`);
 
     if (this.activeUserSessions.has(userId)) {
@@ -111,7 +109,7 @@ export class MusicPlayerServer extends TpaServer {
       const loginUrl = `${config.server.webUrl}/login/${userId}`;
       logger.info(loginUrl);
       session.layouts.showTextWall(
-        `Please visit the following URL on your phone or computer to connect your Spotify account: ${loginUrl}`,
+        `Please open the webview or visit the following URL on your phone or computer to connect your Spotify account: ${loginUrl}`,
         {durationMs: 5000}
       );
     }
@@ -151,7 +149,7 @@ export class MusicPlayerServer extends TpaServer {
     this.activeUserSessions.delete(userId);
   }
 
-  private setupUserSettings(session: TpaSession, sessionId: string, userId: string): void {
+  private setupUserSettings(session: AppSession, sessionId: string, userId: string): void {
     session.settings.onValueChange(SettingKey.MUSIC_PLAYER, (newValue, oldValue) => {
       logger.info(`Music player changed for user ${userId}: ${oldValue} -> ${newValue}`);
       this.reapplySessionSettingsAndHandlers(userId);
@@ -166,7 +164,7 @@ export class MusicPlayerServer extends TpaServer {
     });
   }
 
-  public async sendUserSettings(session: TpaSession, sessionId: string, userId: string): Promise<any> {
+  public async sendUserSettings(session: AppSession, sessionId: string, userId: string): Promise<any> {
     try {
       const settingsArray: any[] = session.settings.getAll();
       logger.debug(settingsArray);
@@ -249,4 +247,14 @@ export class MusicPlayerServer extends TpaServer {
   }
 }
 
-export const server = new MusicPlayerServer();
+export async function startServer() {
+  await tokenService.init();
+  
+  const server = new MusicPlayerServer();
+
+  server.attachCustomRoute();
+
+  await server.start();
+
+  return server;
+}
