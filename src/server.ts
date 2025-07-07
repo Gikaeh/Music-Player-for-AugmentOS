@@ -109,7 +109,7 @@ export class MusicPlayerServer extends AppServer {
       const loginUrl = `${config.server.webUrl}/login/${userId}`;
       logger.info(loginUrl);
       session.layouts.showTextWall(
-        `Please visit the following URL on your phone or computer to connect your Spotify account: ${loginUrl}`,
+        `Please open the webview or visit the following URL on your phone or computer to connect your Spotify account: ${loginUrl}`,
         {durationMs: 5000}
       );
     }
