@@ -17,7 +17,7 @@ model Token {
   userId       String @id @unique
   accessToken  String
   refreshToken String
-  expiresIn    Int
+  expiresIn    BigInt
   scope        String
   tokenType    String
   
